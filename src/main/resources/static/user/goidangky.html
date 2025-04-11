@@ -1,0 +1,358 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Quản lý gói đăng ký</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous">
+<style>
+body {
+	background: linear-gradient(1deg, #b561f1, #08013a);
+	padding-top: 70px; /* Tạo khoảng trống cho navbar */
+}
+
+a {
+	text-decoration: none; /* Loại bỏ gạch chân */
+	color: inherit; /* Thừa kế màu chữ từ phần tử cha */
+	font-weight: normal; /* Đảm bảo không có kiểu chữ đậm */
+}
+
+.navbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000; /* Đảm bảo nó hiển thị trên các phần tử khác */
+	background-color: rgba(2, 21, 70, 0.9) !important;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng đổ bóng */
+	height: 55px;
+}
+
+.card {
+	background: rgba(255, 255, 255, 0.9);
+	border-radius: 10px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.list-group-item {
+	background: rgba(255, 255, 255, 0.9);
+}
+
+footer {
+	background-color: #222;
+}
+
+.row {
+	display: flex;
+	justify-content: space-between;
+}
+
+.col-md-4 {
+	flex: 0 0 30%; /* Set the width of each column to 30% */
+	margin: 5px;
+}
+
+.language-switch {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	font-size: 1rem;
+	display: flex;
+	gap: 10px; /* Adds spacing between the two links */
+}
+
+.language-switch a {
+	text-decoration: none !important; /* Bỏ dấu gạch chân */
+	color: #ffffff;
+	transition: color 0.3s ease-in-out;
+}
+
+.language-switch a:hover {
+	color: #030bfa; /* Change the color on hover */
+	text-decoration: underline; /* Gạch chân khi hover */
+}
+
+.language-switch a.active {
+	color: #030bfa; /* Highlight the active language */
+	font-weight: bold;
+}
+
+.timkiem {
+	margin-right: 150px;
+}
+
+.hangcuoi {
+	margin-top: 10px;
+}
+
+.sidebar-item {
+	color: white;
+	background-color: #343a40; /* Màu nền xám đậm */
+	padding: 10px;
+	border: 1px solid #6c757d; /* Viền màu xám nhạt */
+	border-radius: 5px;
+	margin-bottom: 10px;
+	margin-left: 15px;
+	text-align: left;
+	font-weight: bold;
+	transition: 0.3s;
+}
+
+.sidebar-item:hover {
+	background-color: #495057; /* Màu nền hover */
+	border-color: white;
+	color: white !important; /* Giữ màu chữ trắng khi hover */
+}
+
+.container {
+	display: flex;
+	gap: 15px; /* Khoảng cách giữa các phần tử */
+	justify-content: center; /* Căn giữa theo chiều ngang */
+}
+
+.package {
+	flex: 1; /* Chia đều kích thước */
+	max-width: 300px; /* Giới hạn chiều rộng */
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	text-align: center;
+}
+</style>
+</head>
+<body ng-app="myapp">
+	<div ng-controller="myctrl">
+		<!-- Navbar -->
+		<nav class="navbar navbar-expand-lg navbar-light align-items-center">
+			<div class=" phantu container d-flex justify-content-center">
+				<a class="navbar-brand text-light" href="/view/trangchu.html"><i
+					class="bi bi-house-door"></i> Music</a>
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#navbarNav">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse justify-content-center"
+					id="navbarNav">
+					<ul class="navbar-nav me-auto">
+						<li class="nav-item"><a class="nav-link text-light"
+							href="/view/baihat.html"><i class="bi bi-headphones"></i> Bài
+								hát</a></li>
+						<li class="nav-item"><a class="nav-link text-light"
+							href="/view/album.html"><i class="bi bi-person-rolodex"></i>
+								Album</a></li>
+						<li class="nav-item"><a class="nav-link text-light"
+							href="/view/nghesi.html"><i class="bi bi-music-note-list"></i>
+								Nghệ sĩ</a></li>
+					</ul>
+				</div>
+				<form class="timkiem d-flex">
+					<input class="form-control me-2" type="search"
+						placeholder="Tìm kiếm" ng-model="keyword">
+					<button ng-click="search(keyword)"
+						class="btn btn-outline-primary text-light" type="submit">Tìm
+					</button>
+				</form>
+
+				<div ng-if="!user || !user.username" style="margin-left: 50px;">
+					<button class="btn btn2 btn-primary ms-2 "
+						onclick="window.location.href='/login'">Đăng nhập</button>
+					<button class="btn btn3 btn-outline-primary text-light ms-2 "
+						onclick="window.location.href='dangky.html'">Đăng ký</button>
+				</div>
+				<!-- Dropdown User -->
+				<div class="dropdown" style="margin-right: 100px;"
+					ng-if="user || user.username">
+					<a class="btn btn2 btn-outline-primary ms-2"
+						href="/user/nangcaptaikhoan.html"> Nâng cấp tài khoản <i
+						class="bi bi-lightbulb"></i>
+					</a>
+					<button class="btn btn-primary dropdown-toggle" type="button"
+						id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+						{{user.hoTen}}</button>
+					<ul class="dropdown-menu dropdown-menu-end"
+						aria-labelledby="userDropdown">
+						<li><a class="dropdown-item" href="/user/profile.html">Quản
+								lý tài khoản</a></li>
+						<li><a class="dropdown-item" href="/user/doimatkhau.html">Đổi
+								mật khẩu</a></li>
+						<li>
+							<hr class="dropdown-divider">
+						</li>
+						<li>
+							<form action="/logout" method="POST">
+								<button class="btn btn-primary dropdown-item text-danger"
+									type="submit">Đăng xuất</button>
+							</form>
+						</li>
+					</ul>
+				</div>
+				<div class="language-switch">
+					<a href="#">Tiếng Việt</a> | <a href="#">English</a>
+				</div>
+			</div>
+		</nav>
+
+
+		<!-- Main Content -->
+		<div
+			class="container d-flex justify-content-center align-items-center"
+			style="min-height: 100vh;">
+			<!-- Sidebar -->
+			<div class="d-flex flex-column p-3 bg-dark text-white"
+				style="width: 250px; height: 100vh; position: fixed; left: 0;">
+				<hr>
+				<ul class="nav nav-pills flex-column mb-auto">
+					<li class="nav-item"><a href="/user/profile.html"
+						class="nav-link sidebar-item">Cài đặt tài khoản</a></li>
+					<li class="nav-item"><a href="/user/quanlyplaylist.html"
+						class="nav-link  sidebar-item">Quản lý playlist</a></li>
+					<li class="nav-item"><a href="/user/profile.html"
+						class="nav-link sidebar-item">Lịch sử nghe</a></li>
+					<li class="nav-item"><a href="/user/goidangky.html"
+						class="nav-link active sidebar-item">Gói đăng ký</a></li>
+					<li class="nav-item"><a href="/user/lichsuthanhtoan.html"
+						class="nav-link sidebar-item">Lịch sử thanh toán</a></li>
+				</ul>
+			</div>
+
+			<!-- Nội dung chính -->
+
+			<!-- Danh sách -->
+			<div class="col-md-7 card shadow-sm p-5" style="margin-left: 100px;">
+				<div class="flex-grow-1 p-4">
+					<h3 class="text-primary">GÓI ĐĂNG KÝ</h3>
+					<hr>
+
+					<div ng-if="goiPremium.length === 0" class="text-center">
+						<h4 class="text-dark">Bạn chưa có gói đăng ký</h4>
+						<p class="text-dark">Hãy đăng ký gói premium để trải nghiệm
+							đầy đủ tính năng!</p>
+						<a href="/user/nangcaptaikhoan.html" class="btn btn-primary">Đăng
+							ký ngay</a>
+					</div>
+					<div class="card plus text-center" ng-repeat="goi in goiPremium"
+						ng-if="goiPremium.length > 0">
+
+
+
+						<h2>
+							<strong>{{ goi.goiPremium && goi.goiPremium.tenGoi }}</strong>
+						</h2>
+						<h3>{{ goi.goiPremium && goi.goiPremium.gia | currency:'' :0
+							}}đ</h3>
+						<p>Ngày đăng ký: {{ goi.ngayBatDau | date:'dd/MM/yyyy' }}</p>
+						<p>Ngày hết hạn: {{ goi.ngayHetHan | date:'dd/MM/yyyy' }}</p>
+						<p>
+							Trạng thái: <span
+								ng-class="{'text-success': goi.trangThai, 'text-danger': !goi.trangThai}">
+								{{ goi.trangThai ? 'Đang hoạt động' : 'Hết hạn' }} </span>
+						</p>
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+		<div
+			style="background: linear-gradient(1deg, #b561f1, #08013a); padding: 20px; text-align: center; color: white; font-size: 14px;">
+			<i class="bi bi-badge-hd"></i>
+			<p>Chào mừng bạn đến với Music Web 🎵 - Nơi âm nhạc kết nối cảm
+				xúc!</p>
+			<p style="font-style: italic; opacity: 0.8;">"Âm nhạc là ngôn ngữ
+				chung của tâm hồn!"</p>
+		</div>
+	</div>
+
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+		crossorigin="anonymous">
+    </script>
+	<script>
+        var app = angular.module('myapp', []);
+
+        app.controller("myctrl", function ($http, $scope) {
+            $scope.goiPremium = [];
+            // Load thông tin user
+            $scope.user = {
+                username: null,
+                password: null,
+                hoTen: null,
+                email: null,
+                hinhAnh: null,
+                trangThai: null,
+                role: null,
+            };
+
+            // Hàm tải thông tin người dùng
+            $scope.loadUser = function () {
+                var url = "http://localhost:8080/api/user/profile";
+                $http.get(url).then(function (resp) {
+                    if (resp.data.username === null) {
+                        $scope.user = null;  // Nếu không có dữ liệu người dùng, đặt $scope.user là null
+                        console.log("Người dùng chưa đăng nhập hoặc không có dữ liệu.");
+                    } else {
+                        $scope.user = resp.data;  // Gán thông tin người dùng
+                        console.log("Dữ liệu đã được tải");
+                    }
+                }, function (error) {
+                    console.error("Có lỗi xảy ra khi tải dữ liệu: ", error);
+                });
+            };
+            // Gọi hàm loadUser khi controller khởi tạo
+            $scope.loadUser();
+
+         	// Hàm lấy gói đăng ký
+			$scope.loadUserpremium = function () {
+			    var url = "http://localhost:8080/api/userpremium"; // API lấy gói đăng ký
+			    $http.get(url).then(function (response) {
+			        var today = new Date();
+			        today.setHours(0, 0, 0, 0); // Đặt giờ về 0 để so sánh chính xác
+			
+			        $scope.goiPremium = response.data.filter(up => up.user.username.includes($scope.user.username));
+			
+			        // Kiểm tra và cập nhật trạng thái nếu cần
+			        $scope.goiPremium.forEach(up => {
+			            var ngayHetHan = new Date(up.ngayHetHan);
+			            ngayHetHan.setHours(0, 0, 0, 0); // Đặt giờ về 0 để so sánh đúng
+			
+			            if (ngayHetHan <= today && up.trangThai !== false) {
+			                up.trangThai = false;
+			                // Gửi yêu cầu cập nhật trạng thái lên server
+			                var updateUrl = `http://localhost:8080/api/userpremium/${up.id}`;
+			                $http.put(updateUrl, up)
+			                    .then(response => console.log(`Đã cập nhật trạng thái gói ${up.id} thành false`))
+			                    .catch(error => console.error("Lỗi khi cập nhật trạng thái:", error));
+			            } else {
+			                up.trangThai = true;
+			                // Gửi yêu cầu cập nhật trạng thái lên server
+			                var updateUrl = `http://localhost:8080/api/userpremium/${up.id}`;
+			                $http.put(updateUrl, up)
+			                    .then(response => console.log(`Đã cập nhật trạng thái gói ${up.id} thành true`))
+			                    .catch(error => console.error("Lỗi khi cập nhật trạng thái:", error));
+			            }
+			        });
+			    }).catch(function (error) { 
+			        console.error("Lỗi khi tải gói đăng ký:", error);
+			    });
+			};
+
+            $scope.loadUserpremium();
+
+        });
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Quản lý Bình Luận</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous">
+<style>
+.navbar {
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000; /* Đảm bảo nó hiển thị trên các phần tử khác */
+	background-color: rgba(2, 21, 70, 0.9) !important;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng đổ bóng */
+	height: 55px;
+}
+
+.sidebar-item {
+	color: white;
+	background-color: #343a40; /* Màu nền xám đậm */
+	padding: 10px;
+	border: 1px solid #6c757d; /* Viền màu xám nhạt */
+	border-radius: 5px;
+	margin-bottom: 10px;
+	margin-left: 15px;
+	text-align: left;
+	font-weight: bold;
+	transition: 0.3s;
+}
+
+.sidebar-item:hover {
+	background-color: #495057; /* Màu nền hover */
+	border-color: white;
+	color: white !important; /* Giữ màu chữ trắng khi hover */
+}
+</style>
+</head>
+<body ng-app="myapp">
+	<div ng-controller="myctrl">
+		<!-- Navbar -->
+		<nav class="navbar navbar-expand-lg navbar-light align-items-center">
+			<div class="container d-flex justify-content-between">
+				<!-- Bên trái: MUSIC -->
+				<a class="navbar-brand text-light" href="#"><i
+					class="bi bi-music-note"></i> MUSIC</a>
+
+				<!-- Ở giữa: A D M I N -->
+				<div class="text-center flex-grow-1">
+					<span class="navbar-text text-light fw-bold fs-4">A D M I N</span>
+				</div>
+
+				<!-- Bên phải: User dropdown + Ngôn ngữ -->
+				<div class="d-flex align-items-center">
+					<!-- Dropdown User -->
+					<div class="dropdown me-3">
+						<button class="btn btn-primary dropdown-toggle" type="button"
+							id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+							{{user.hoTen}}</button>
+						<ul class="dropdown-menu dropdown-menu-end"
+							aria-labelledby="userDropdown">
+							<li><a class="dropdown-item" href="/user/profile.html">Quản
+									lý tài khoản</a></li>
+							<li><a class="dropdown-item" href="/user/doimatkhau.html">Đổi
+									mật khẩu</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><form action="/logout" method="POST">
+									<button class="btn btn-primary dropdown-item text-danger"
+										type="submit">Đăng xuất</button>
+								</form></li>
+						</ul>
+					</div>
+
+					<!-- Chuyển đổi ngôn ngữ -->
+					<div class="language-switch">
+						<a href="#">Tiếng Việt</a> | <a href="#">English</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		<!-- Body -->
+		<div class="row">
+			<!-- Menu -->
+			<div class="col-3">
+				<!-- Sidebar -->
+				<div class="d-flex flex-column p-3 bg-dark text-white"
+					style="width: 250px; height: 100vh;">
+					<hr>
+					<ul class="nav nav-pills flex-column mb-auto">
+						<li class="nav-item"><a href="/admin/theloai/index.html"
+							class="nav-link sidebar-item">Quản lý thể loại nhạc</a></li>
+						<li><a href="/admin/nghesi/index.html"
+							class="nav-link sidebar-item">Quản lý Nghệ sĩ</a></li>
+						<li><a href="/admin/baihat/index.html"
+							class="nav-link sidebar-item">Quản lý Bài hát</a></li>
+						<li><a href="/admin/album/index.html"
+							class="nav-link sidebar-item">Quản lý Album</a></li>
+						<li><a href="/admin/goidangky/index.html"
+							class="nav-link sidebar-item">Quản lý Gói đăng ký</a></li>
+						<li><a href="/admin/binhluan/index.html"
+							class="nav-link active sidebar-item">Quản lý Bình luận</a></li>
+						<li><a href="/admin/user" class="nav-link sidebar-item">Quản lý
+								Người dùng</a></li>
+						<li><a href="/admin/baocao/index.html"
+							class="nav-link sidebar-item">Báo cáo thống kê</a></li>
+					</ul>
+				</div>
+			</div>
+			<!-- Noi dung -->
+			<div class="col-8 qltheloai mx-4" style="margin-top: 70px;">
+				<!-- Top content -->
+				<form ng-submit="search()">
+					<div class="d-flex justify-content-center gap-2 mb-3">
+						<input type="text" class="form-control w-50"
+							placeholder="Tìm kiếm" ng-model="keyword" ng-change="search()">
+						<button type="submit" class="btn btn-outline-dark">Tìm
+							kiếm</button>
+					</div>
+				</form>
+
+				<!-- Bottom content -->
+				<div class="border border-secondary rounded p-3 mb-3">
+					<table class="table text-center">
+						<!-- Thêm text-center để căn giữa nội dung trong bảng -->
+						<thead>
+							<tr>
+								<th>User</th>
+								<th>Bài hát</th>
+								<th>Nội dung</th>
+								<th>Ngày</th>
+								<th>Thời gian</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="bl in binhluans">
+								<td>{{ bl.user.username }}</td>
+								<td>{{ bl.baiHat.tenBaiHat }}</td>
+								<td>{{ bl.noiDungBL }}</td>
+								<td>{{ bl.ngayBinhLuan | date:'dd/MM/yyyy'}}</td>
+								<td>{{ bl.ngayBinhLuan | date:'HH:mm:ss' }}</td>
+								<td>
+									<button class="btn btn-danger btn-sm"
+										ng-click="delete(bl.binhLuanId)">
+										<i class="bi bi-check"></i> Xóa
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+		crossorigin="anonymous"></script>
+	<script>
+		var app = angular.module("myapp", []);
+		app.controller("myctrl", function($http, $scope) {
+			$scope.binhluans
+			$scope.keyword = null;
+			$scope.user;
+			
+			$scope.loadUser = function(){
+				var url = "http://localhost:8080/api/user/profile";
+				$http.get(url).then(function(resp) {
+					$scope.user = resp.data;
+					console.log("Dữ liệu đã được tải");
+				}, function(error) {
+					console.error("Có lỗi xảy ra khi tải dữ liệu: ", error);
+				});
+			}
+			
+			$scope.loadUser();
+			
+			$scope.loadall = function() {
+				var url = "http://localhost:8080/api/comments/";
+				$http.get(url).then(function(resp) {
+					$scope.binhluans = resp.data.sort((a, b) => new Date(b.ngayBinhLuan) - new Date(a.ngayBinhLuan));
+					console.log("Dữ liệu đã được tải");
+				}, function(error) {
+					console.error("Có lỗi xảy ra khi tải dữ liệu: ", error);
+				});
+			};
+			
+			$scope.loadall();
+			
+			$scope.search = function() {
+				if($scope.keyword != null || $scope.keyword != ""){
+					var url = "http://localhost:8080/api/comments/";
+					$http.get(url).then(function(resp) {
+					    $scope.binhluans = resp.data.filter(bl =>
+				        	bl.user.username.toLowerCase().includes($scope.keyword.toLowerCase()) ||
+				       		bl.baiHat.tenBaiHat.toLowerCase().includes($scope.keyword.toLowerCase()) ||
+				        	bl.noiDungBL.toLowerCase().includes($scope.keyword.toLowerCase())
+				        	.sort((a, b) => new Date(b.ngayBinhLuan) - new Date(a.ngayBinhLuan))
+				    );
+						console.log("Dữ liệu đã được tải");
+					}, function(error) {
+						console.error("Có lỗi xảy ra khi tải dữ liệu: ", error);
+					});
+				} else {
+					$scope.loadall();
+				}
+			}
+			
+			$scope.reset = function(){
+				$scope.binhluans = {}
+			}
+			
+		    $scope.delete = function(bl) {
+		        if (confirm("Bạn có chắc chắn muốn xóa bình luận này không?")) {
+		            var url = "http://localhost:8080/api/comments/" + bl;
+		            $http.delete(url).then(resp => {
+		                $scope.loadall();
+		                alert("Xóa thành công");
+		            }).catch(function(error) {
+		                alert("Xóa thất bại");
+		            });
+		        }
+		    };
+
+			
+		})
+	</script>
+</body>
+</html>

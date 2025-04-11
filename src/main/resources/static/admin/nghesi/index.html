@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Quản lý Nghệ Sĩ</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous">
+<style>
+.navbar {
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000; /* Đảm bảo nó hiển thị trên các phần tử khác */
+	background-color: rgba(2, 21, 70, 0.9) !important;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng đổ bóng */
+	height: 55px;
+}
+
+.sidebar-item {
+	color: white;
+	background-color: #343a40; /* Màu nền xám đậm */
+	padding: 10px;
+	border: 1px solid #6c757d; /* Viền màu xám nhạt */
+	border-radius: 5px;
+	margin-bottom: 10px;
+	margin-left: 15px;
+	text-align: left;
+	font-weight: bold;
+	transition: 0.3s;
+}
+
+.sidebar-item:hover {
+	background-color: #495057; /* Màu nền hover */
+	border-color: white;
+	color: white !important; /* Giữ màu chữ trắng khi hover */
+}
+
+.text-justify {
+	text-align: justify;
+}
+</style>
+</head>
+<body ng-app="myapp">
+	<div ng-controller="myctrl">
+		<!-- Navbar -->
+		<nav class="navbar navbar-expand-lg navbar-light align-items-center">
+			<div class="container d-flex justify-content-between">
+				<!-- Bên trái: MUSIC -->
+				<a class="navbar-brand text-light" href="#"><i
+					class="bi bi-music-note"></i> MUSIC</a>
+
+				<!-- Ở giữa: A D M I N -->
+				<div class="text-center flex-grow-1">
+					<span class="navbar-text text-light fw-bold fs-4">A D M I N</span>
+				</div>
+
+				<!-- Bên phải: User dropdown + Ngôn ngữ -->
+				<div class="d-flex align-items-center">
+					<!-- Dropdown User -->
+					<div class="dropdown me-3">
+						<button class="btn btn-primary dropdown-toggle" type="button"
+							id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+							{{user.hoTen}}</button>
+						<ul class="dropdown-menu dropdown-menu-end"
+							aria-labelledby="userDropdown">
+							<li><a class="dropdown-item" href="/user/profile.html">Quản
+									lý tài khoản</a></li>
+							<li><a class="dropdown-item" href="/user/doimatkhau.html">Đổi
+									mật khẩu</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><form action="/logout" method="POST">
+									<button class="btn btn-primary dropdown-item text-danger"
+										type="submit">Đăng xuất</button>
+								</form></li>
+						</ul>
+					</div>
+
+					<!-- Chuyển đổi ngôn ngữ -->
+					<div class="language-switch">
+						<a href="#">Tiếng Việt</a> | <a href="#">English</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		<!-- Body -->
+		<div class="row">
+			<!-- Menu -->
+			<div class="col-2">
+				<!-- Sidebar -->
+				<div class="d-flex flex-column p-3 bg-dark text-white"
+					style="width: 250px; height: 100vh;">
+					<hr>
+					<ul class="nav nav-pills flex-column mb-auto">
+						<li class="nav-item"><a href="/admin/theloai/index.html"
+							class="nav-link sidebar-item">Quản lý thể loại nhạc</a></li>
+						<li><a href="/admin/nghesi/index.html"
+							class="nav-link active sidebar-item">Quản lý Nghệ sĩ</a></li>
+						<li><a href="/admin/baihat/index.html"
+							class="nav-link  sidebar-item">Quản lý Bài hát</a></li>
+						<li><a href="/admin/album/index.html"
+							class="nav-link sidebar-item">Quản lý Album</a></li>
+						<li><a href="/admin/goidangky/index.html"
+							class="nav-link sidebar-item">Quản lý Gói đăng ký</a></li>
+						<li><a href="/admin/binhluan/index.html"
+							class="nav-link sidebar-item">Quản lý Bình luận</a></li>
+						<li><a href="/admin/user" class="nav-link sidebar-item">Quản
+								lý Người dùng</a></li>
+						<li><a href="/admin/baocao/index.html"
+							class="nav-link sidebar-item">Báo cáo thống kê</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- Noi dung -->
+			<div class="col-10 mx-auto" style="margin-top: 70px;">
+				<div ng-if="!selectedNgheSi">
+					<!-- Top content -->
+					<div class="d-flex justify-content-center mb-3">
+						<input type="text" class="form-control w-50"
+							placeholder="Tìm kiếm nghệ sĩ" ng-model="keyword">
+						<button class="btn btn-outline-dark ms-3"
+							ng-click="search(keyword)">Tìm</button>
+						<button class="btn btn-success ms-3" ng-click="add()">Thêm
+							nghệ sĩ</button>
+					</div>
+
+					<!-- Bottom content -->
+					<div class="border border-secondary rounded p-3 mb-3">
+
+						<table class="table text-center">
+							<!-- Thêm text-center để căn giữa nội dung trong bảng -->
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>Tên nghệ sĩ</th>
+									<th>Giới thiệu</th>
+									<th>Hình nghệ sĩ</th>
+
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="nghesi in nghesis">
+									<td>{{ nghesi.ngheSiId }}</td>
+									<td>{{ nghesi.tenNgheSi }}</td>
+
+									<td class="text-justify"
+										style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+										{{ nghesi.gioiThieu }}</td>
+
+									<!--								<td><img ng-src="{{ nghesi.hinhNgheSi }}" alt="Hình nghệ sĩ" style="width: 50px; height: 50px;"></td>-->
+									<td><img ng-src="/images/{{ nghesi.hinhNgheSi }}"
+										alt="Hình nghệ sĩ" style="width: 100px; height: auto;">
+									</td>
+									<td>
+										<!-- Nút Chỉnh sửa -->
+										<button class="btn btn-primary btn-sm" ng-click="edit(nghesi)">
+											<i class="bi bi-pencil"></i> Chỉnh sửa
+										</button> <!-- Nút Xóa -->
+										<button class="btn btn-danger btn-sm ms-2"
+											ng-click="delete(nghesi.ngheSiId)">
+											<i class="bi bi-trash"></i> Xóa
+										</button>
+									</td>
+								</tr>
+							</tbody>
+
+							<!--							<tbody>-->
+							<!--								<tr ng-repeat="nghesi in nghesis">-->
+							<!--									<td>{{ nghesi.ngheSiId }}</td>-->
+							<!--									<td>{{ nghesi.tenNgheSi }}</td>-->
+							<!--									<td>{{ nghesi.gioiThieu }}</td>-->
+							<!--									<td>{{ nghesi.hinhNgheSi }}</td>-->
+							<!--									<td>-->
+							<!--										<button class="btn btn-primary btn-sm" ng-click="edit(nghesi)">-->
+							<!--											<i class="bi bi-check"></i> Chỉnh sửa-->
+							<!--										</button>-->
+							<!--									</td>-->
+							<!--								</tr>-->
+							<!--							</tbody>-->
+						</table>
+					</div>
+				</div>
+				<!-- Bảng thêm và chỉnh sửa thông tin -->
+				<div class="col-6 mx-auto" ng-if="selectedNgheSi">
+					<h3>Nhập thông tin nghệ sĩ</h3>
+					<div class="mb-3">
+						<label class="form-label">ID Nghệ Sĩ</label> <input type="text"
+							class="form-control" ng-model="selectedNgheSi.ngheSiId">
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Tên Nghệ Sĩ</label> <input type="text"
+							class="form-control" ng-model="selectedNgheSi.tenNgheSi" required>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Giới Thiệu</label> <input type="text"
+							class="form-control" ng-model="selectedNgheSi.gioiThieu" required>
+
+					</div>
+					<div class="mb-3">
+						<label class="form-label mb-2">Hình Nghệ Sĩ</label> <br> <img
+							ng-if="selectedNgheSi.hinhNgheSi"
+							ng-src="/images/{{ selectedNgheSi.hinhNgheSi }}"
+							style="width: 100px; height: auto;">
+						<p>{{ selectedNgheSi.hinhNgheSi.split('/').pop() }}</p>
+						<!-- Hiển thị tên ảnh -->
+						<input type="file" class="form-control mt-2"
+							onchange="angular.element(this).scope().onFileSelect(this)"
+							required>
+					</div>
+					<button class="btn btn-outline-danger" ng-click="cancelEdit()">Hủy</button>
+					<!-- Nút Cập nhật chỉ hiện nếu đang chỉnh sửa nghệ sĩ  -->
+
+					<button class="btn btn-success" ng-if="selectedNgheSi.ngheSiId"
+						ng-click="update(selectedNgheSi)">Lưu</button>
+
+					<!-- Nút Thêm chỉ hiện nếu đang tạo nghệ sĩ mới -->
+					<button class="btn btn-success" ng-if="!selectedNgheSi.ngheSiId"
+						ng-click="create(selectedNgheSi)">Lưu</button>
+
+				</div>
+			</div>
+
+
+			<script
+				src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+				integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+				crossorigin="anonymous">
+
+		</script>
+
+			<script>
+			var app = angular.module("myapp", []);
+
+			app.controller("myctrl", function ($scope, $http) {
+				$scope.user;
+				
+				$scope.loadUser = function(){
+					var url = "http://localhost:8080/api/user/profile";
+					$http.get(url).then(function(resp) {
+						$scope.user = resp.data;
+						console.log("Dữ liệu đã được tải");
+					}, function(error) {
+						console.error("Có lỗi xảy ra khi tải dữ liệu: ", error);
+					});
+				}
+				
+				$scope.loadUser();
+				const apiUrl = "http://localhost:8080/api/nghesi"; // Địa chỉ API
+
+				// Danh sách nghệ sĩ
+				$scope.nghesis = [];
+
+				// Nghệ sĩ đang chọn để sửa
+				$scope.selectedNgheSi = null;
+
+				// Tải danh sách nghệ sĩ từ API
+				$scope.loadNgheSi = function () {
+					$http.get(apiUrl).then(function (response) {
+						$scope.nghesis = response.data;
+					}).catch(function (error) {
+						console.error("Lỗi tải danh sách nghệ sĩ:", error);
+					});
+				};
+
+				// Tìm kiếm nghệ sĩ theo ID hoặc tên
+				$scope.search = function (keyword) {
+					if (!keyword) {
+						$scope.loadNgheSi(); // Nếu không có keyword, tải lại danh sách
+						return;
+					}
+					const lowerKeyword = keyword.toLowerCase();
+					$scope.nghesis = $scope.nghesis.filter(nghesi =>
+							nghesi.tenNgheSi.toLowerCase().includes(lowerKeyword) ||
+							nghesi.ngheSiId.toString().includes(lowerKeyword)
+					);
+				};
+
+				// Chọn nghệ sĩ để chỉnh sửa
+				$scope.edit = function (nghesi) {
+					$scope.selectedNgheSi = angular.copy(nghesi);
+				};
+
+				// Hủy chỉnh sửa
+				$scope.cancelEdit = function () {
+					$scope.selectedNgheSi = null;
+				};
+
+				// Cập nhật nghệ sĩ
+				$scope.update = function (nghesi) {
+					$http.put(`${apiUrl}/${nghesi.ngheSiId}`, nghesi).then(function () {
+						alert("Cập nhật thành công!");
+						$scope.loadNgheSi();
+						$scope.cancelEdit();
+					}).catch(function (error) {
+						console.error("Lỗi cập nhật:", error);
+						alert("Lỗi khi cập nhật nghệ sĩ!");
+					});
+				};
+
+
+				// Thêm nghệ sĩ mới với kiểm tra dữ liệu
+				$scope.create = function (nghesi) {
+					if (!nghesi.tenNgheSi || !nghesi.gioiThieu || !nghesi.hinhNgheSi) {
+						alert("Vui lòng điền đầy đủ thông tin nghệ sĩ!");
+						return;
+					}
+
+					$http.post(apiUrl, nghesi).then(function () {
+						alert("Thêm nghệ sĩ thành công!");
+						$scope.loadNgheSi();
+						$scope.cancelEdit();
+					}).catch(function (error) {
+						console.error("Lỗi khi thêm nghệ sĩ:", error);
+						alert("Lỗi khi thêm nghệ sĩ!");
+					});
+				};
+
+
+				// Xóa nghệ sĩ
+				$scope.delete = function (id) {
+					if (confirm("Bạn có chắc muốn xóa nghệ sĩ này?")) {
+						$http.delete(`${apiUrl}/${id}`).then(function () {
+							alert("Xóa thành công!");
+							$scope.loadNgheSi();
+						}).catch(function (error) {
+							console.error("Lỗi khi xóa:", error);
+							alert("Lỗi khi xóa nghệ sĩ!");
+						});
+					}
+				};
+
+				// Mở form thêm nghệ sĩ mới
+				$scope.add = function () {
+					$scope.selectedNgheSi = {};
+				};
+
+				// Gọi hàm load danh sách khi trang được load
+				$scope.loadNgheSi();
+
+				$scope.onFileSelect = function(element) {
+					var file = element.files[0];  // Lấy tệp được chọn
+					if (file) {
+						// Gán tên tệp vào selectedBaiHat.hinhBaiHat
+						$scope.selectedNgheSi = $scope.selectedNgheSi || {};  // Đảm bảo selectedBaiHat không phải là undefined
+						$scope.selectedNgheSi.hinhNgheSi = file.name;  // Gán tên file vào thuộc tính hinhBaiHat
+
+						// Bạn có thể lưu tệp hoặc thực hiện các xử lý khác với tệp
+						console.log("Tên Hình Nghệ sĩ: " + $scope.selectedNgheSi.hinhNgheSi);
+					} else {
+						console.log("Không có tệp nào được chọn.");
+					}
+				};
+			});
+
+
+		</script>
+</body>
+</html>

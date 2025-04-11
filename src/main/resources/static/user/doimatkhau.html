@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đổi mật khẩu</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous">
+<style>
+body {
+	background: linear-gradient(1deg, #b561f1, #08013a);
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family: 'Poppins', sans-serif;
+	position: relative;
+}
+
+.language-switch {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	font-size: 1rem;
+	display: flex;
+	gap: 10px; /* Adds spacing between the two links */
+}
+
+.language-switch a {
+	color: #fff;
+	text-decoration: none;
+	transition: color 0.3s ease-in-out;
+}
+
+.language-switch a:hover {
+	color: #ff416c; /* Change the color on hover */
+	text-decoration: underline;
+}
+
+.language-switch a.active {
+	color: #ff416c; /* Highlight the active language */
+	font-weight: bold;
+}
+
+.register-container {
+	width: 400px;
+	background: rgba(255, 255, 255, 0.15);
+	padding: 30px;
+	border-radius: 15px;
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	color: #fff;
+}
+
+.form-control {
+	border: none;
+	padding: 10px;
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.2);
+	color: #fff;
+}
+
+.form-control::placeholder {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+.form-control:focus {
+	background: rgba(255, 255, 255, 0.3);
+	box-shadow: none;
+	border: none;
+}
+
+.btn-primary {
+	background: #ff416c;
+	border: none;
+	font-weight: bold;
+	transition: 0.3s;
+}
+
+.btn-primary:hover {
+	background: #ff4b2b;
+	transform: scale(1.05);
+}
+
+.terms-text {
+	font-size: 14px;
+	color: #ffebeb;
+}
+
+input[disabled] {
+	background-color: rgba(255, 255, 255, 0.2) !important;
+	/* Màu nền giống các ô nhập khác */
+	color: #fff !important; /* Màu chữ trắng để dễ nhìn */
+	border: 1px solid rgba(255, 255, 255, 0.3); /* Viền tinh tế hơn */
+	opacity: 1 !important; /* Loại bỏ hiệu ứng làm mờ */
+}
+</style>
+</head>
+<body ng-app="myapp">
+	<div ng-controller="myctrl">
+		<div class="language-switch">
+			<a href="#" class="text-light active">Tiếng Việt</a> | <a href="#"
+				class="text-light">English</a>
+		</div>
+
+		<div class="register-container text-center">
+			<h2 class="fw-bold">Đổi mật khẩu</h2>
+
+			<form>
+				<div class="mb-3 text-start">
+					<label class="form-label">Tên đăng nhập</label> <input type="text"
+						class="form-control" ng-model="user.username"
+						placeholder="Nhập tên đăng nhập" disabled>
+				</div>
+				<div class="mb-3 text-start">
+					<label class="form-label">Mật khẩu cũ</label> <input
+						type="password" class="form-control" ng-model="oldPassword"
+						placeholder="Nhập mật khẩu">
+				</div>
+				<div class="mb-3 text-start">
+					<label class="form-label">Mật khẩu mới</label> <input
+						type="password" class="form-control" ng-model="newPassword"
+						placeholder="Nhập mật khẩu">
+				</div>
+				<div class="mb-3 text-start">
+					<label class="form-label">Nhập lại mật khẩu</label> <input
+						type="password" ng-model="reNewPassword" class="form-control"
+						placeholder="Nhập lại mật khẩu">
+				</div>
+				<button type="submit" ng-click="changePassword()"
+					class="btn btn-primary w-100">Xác nhận</button>
+			</form>
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+		crossorigin="anonymous"></script>
+	<script>
+		var app = angular.module("myapp", []);
+		app.controller("myctrl",function($http, $scope) {
+			$scope.user = {
+				username : null,
+				password : null,
+				hoTen : null,
+				email : null,
+				hinhAnh : null,
+				trangThai : null,
+				role : null,
+			};
+			$scope.oldPassword = "";
+			$scope.newPassword = "";
+			$scope.reNewPassword = "";
+
+			// Hàm tải thông tin người dùng
+			$scope.loadUser = function() {
+				var url = "http://localhost:8080/api/user/profile";
+				$http.get(url).then(function(resp) {
+					if (resp.data.username === null) {
+						$scope.user = null; // Nếu không có dữ liệu người dùng, đặt $scope.user là null
+						console.log("Người dùng chưa đăng nhập hoặc không có dữ liệu.");
+					} else {
+						$scope.user = resp.data; // Gán thông tin người dùng
+						console.log("Dữ liệu đã được tải");
+					}
+				},
+				function(error) {
+					console.error("Có lỗi xảy ra khi tải dữ liệu: ",error);
+				});
+			};
+
+			// Gọi hàm loadUser khi controller khởi tạo
+			$scope.loadUser();
+
+			// Hàm đổi mật khẩu
+			$scope.changePassword = function() {
+			    if (!$scope.oldPassword || !$scope.newPassword || !$scope.reNewPassword) {
+			        alert("Vui lòng nhập đầy đủ thông tin");
+			        return;
+			    }
+
+			    
+
+			    var url = "http://localhost:8080/api/user/changepassword/" + $scope.user.username;
+
+			    var checkPasswordRequest = {
+			        username: $scope.user.username,
+			        password: $scope.oldPassword // Gửi mật khẩu cũ để kiểm tra
+			    };
+
+			    $http.put(url, checkPasswordRequest).then(function(resp) {
+			        if (resp.data) { 
+			        	
+			        	if ($scope.reNewPassword !== $scope.newPassword) {
+					        alert("Xác nhận mật khẩu chưa đúng");
+					        return;
+					    }
+					    if ($scope.oldPassword == $scope.newPassword) {
+					        alert("Mật khẩu mới giống mật khẩu cũ");
+					        return;
+					    }
+			            // Nếu mật khẩu cũ đúng, tiến hành cập nhật mật khẩu
+			            var updateUser = angular.copy($scope.user);
+			            updateUser.password = $scope.newPassword;
+
+			            $http.put("http://localhost:8080/api/user/" + $scope.user.username, updateUser)
+			                .then(function(resp2) {
+			                    alert("Đổi mật khẩu thành công");
+			                    $scope.oldPassword = "";
+			                    $scope.newPassword = "";
+			                    $scope.reNewPassword = "";
+			                    window.location.href = '/view/trangchu.html';
+			                }, function(error) {
+			                    alert("Đổi mật khẩu thất bại! Vui lòng kiểm tra lại.");
+			                });
+			        } else {
+			            alert("Mật khẩu cũ không đúng!"); // Cảnh báo nếu sai mật khẩu cũ
+			        }
+			    }, function(error) {
+			        alert("Có lỗi xảy ra, vui lòng thử lại.");
+			    });
+			};
+		})
+	</script>
+</body>
+</html>

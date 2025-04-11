@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nâng cấp tài khoản</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous">
+<style>
+body {
+	background: linear-gradient(1deg, #b561f1, #08013a);
+	color: #fff;
+}
+
+.card {
+	border-radius: 10px;
+	padding: 20px;
+}
+
+.plus {
+	background: linear-gradient(135deg, #5f28a8, #8d4eda);
+	color: #fff;
+}
+
+.premium {
+	background: linear-gradient(135deg, #b28330, #403826);
+	color: #fff;
+}
+
+.btn-plus {
+	background-color: #b184f7;
+	border: none;
+	transition: all 0.3s ease;
+}
+
+.btn-plus:hover {
+	background-color: #9b63f5;
+	transform: translateY(-2px);
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-premium {
+	background-color: #f3b600;
+	border: none;
+	transition: all 0.3s ease;
+}
+
+.btn-premium:hover {
+	background-color: #d9a100;
+	transform: translateY(-2px);
+	box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tieude {
+	padding-left: 120px;
+}
+
+.tieudephu {
+	margin-left: 120px;
+}
+
+.hh4 {
+	margin-left: 120px;
+}
+
+.chudangky {
+	color: #f3b600;
+	text-align: center;
+	margin-bottom: 30px;
+	margin-top: 20px;
+}
+
+.accordion-item {
+	background-color: rgba(255, 255, 255, 0.1);
+}
+
+.accordion-button {
+	background-color: rgba(255, 255, 255, 0.2);
+	color: #fff;
+}
+
+.accordion-button:not(.collapsed) {
+	background-color: rgba(255, 255, 255, 0.3);
+	color: #fff;
+}
+</style>
+</head>
+
+<body ng-app="myapp" ng-controller="myctrl">
+
+	<div>
+		<h2 class="chudangky text-center">
+			<i class="bi bi-amazon"></i> Đăng ký gói nâng cấp
+		</h2>
+		<a href="/view/trangchu.html"
+			class="btn btn-outline-light d-block mx-auto text-center mt-2"
+			style="width: 150px;"> <i class="bi bi-arrow-left"></i> Quay lại
+		</a>
+
+
+		<h1 class="tieude">Âm nhạc</h1>
+		<h1 class="tieudephu">không giới hạn</h1>
+		<h4 class="hh4">Nâng cấp tài khoản để trải nghiệm các</h4>
+		<h4 class="hh4">tính năng và nội dung cao cấp</h4>
+
+
+	</div>
+
+
+	<div class="container py-5">
+		<div class="row justify-content-center">
+			<div class="col-md-5 mt-4" ng-repeat="goi in goipremiumList">
+				<div class="card plus text-center">
+					<h2>
+						<strong>{{ goi.tenGoi }}</strong>
+					</h2>
+					<h3>Chỉ từ {{ goi.gia | currency:'' :0 }}đ</h3>
+					<button class="btn btn-plus text-white px-4 py-2"
+						ng-if="!currentPlan || (currentPlan.tenGoi !== goi.tenGoi)"
+						ng-click="pay(goi.tenGoi, goi.gia)">ĐĂNG KÝ GÓI</button>
+					<hr />
+					<ul class="list-unstyled mt-3">
+						<li>✔ Trải nghiệm nghe nhạc không gián đoạn</li>
+						<li>✔ Thưởng thức vâm nhạc với chất lượng cao</li>
+						<li>✔ Thư viện nhạc cá nhân đầy thể loại</li>
+						<li>✔ Tận hưởng các tính năng nghe nhạc nâng cao</li>
+						<li>✔ Tăng cường khả năng upload, chia sẻ nhạc dễ dàng</li>
+
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="container">
+		<h2 class="text-white text-center">Câu hỏi thường gặp</h2>
+		<br />
+		<div class="accordion accordion-flush" id="accordionFlushExample">
+			<div class="accordion-item">
+				<h2 class="accordion-header">
+					<button class="accordion-button" type="button"
+						data-bs-toggle="collapse"
+						data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+						aria-controls="panelsStayOpen-collapseOne">
+						<strong> Cách đăng nhập và sử dụng các gói dịch vụ ?</strong>
+					</button>
+				</h2>
+				<div id="panelsStayOpen-collapseOne"
+					class="accordion-collapse collapse show">
+					<div class="accordion-body">
+						Để đăng nhập vào <strong>Web nghe nhạc</strong> và sử dụng các gói
+						dịch vụ đã mua, bạn hãy thực hiện các bước sau: <br /> - Mở Web
+						nghe nhạc <br /> - Vào mục Cá Nhân <br /> - Chọn đăng nhập. Sau
+						khi đăng nhập, bạn sẽ nhận được quyền lợi từ các gói dịch vụ đã
+						mua cho tài khoản này
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header">
+						<button class="accordion-button collapsed" type="button"
+							data-bs-toggle="collapse"
+							data-bs-target="#panelsStayOpen-collapseTwo"
+							aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+							<strong>Tôi có thể sử dụng Web nghe nhạc trên các thiết
+								bị nào ?</strong>
+						</button>
+					</h2>
+					<div id="panelsStayOpen-collapseTwo"
+						class="accordion-collapse collapse">
+						<div class="accordion-body">
+							Bạn có thể sử dụng Web nghe nhạc trên:<br /> - Các máy tính
+							bảng<br /> - Máy tính (hệ điều hành Windows và MacOS) thông qua
+							website hoặc ứng dụng dành riêng cho Windows<br /> - Smart TV:
+							Samsung, Sony, LG, TCL...
+						</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header">
+						<button class="accordion-button collapsed" type="button"
+							data-bs-toggle="collapse"
+							data-bs-target="#panelsStayOpen-collapseThree"
+							aria-expanded="false"
+							aria-controls="panelsStayOpen-collapseThree">
+							<strong>Cách kiểm tra thông tin các gói dịch vụ tôi đã
+								mua?</strong>
+						</button>
+					</h2>
+					<div id="panelsStayOpen-collapseThree"
+						class="accordion-collapse collapse">
+						<div class="accordion-body">
+							Để kiểm tra thông tin các gói dịch vụ đã mua, bạn hãy thực hiện
+							các bước sau:<br /> - Đăng nhập vào tài khoản Web nghe nhạc trên
+							ứng dụng Android/iOS<br /> - Vào mục Cá nhân > Quản lý gói.<br />
+							Tại đây, bạn sẽ nhìn thấy các gói đã/đang sử dụng kèm theo ngày
+							hết hạn của mỗi gói.
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+	<!--FOOTER-->
+	<br />
+	<div
+		style="background: linear-gradient(1deg, #b561f1, #08013a); padding: 20px; text-align: center; color: white; font-size: 14px;">
+		<i class="bi bi-badge-hd"></i>
+		<p>Chào mừng bạn đến với Music Web 🎵 - Nơi âm nhạc kết nối cảm
+			xúc!</p>
+		<p style="font-style: italic; opacity: 0.8;">"Âm nhạc là ngôn ngữ
+			chung của tâm hồn!"</p>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+	<script>
+    var app = angular.module("myapp", []);
+
+    app.controller("myctrl", function ($scope, $http) {
+        $scope.goiPremium = [];
+        // Load thông tin user
+        $scope.user = {
+            username: null,
+            password: null,
+            hoTen: null,
+            email: null,
+            hinhAnh: null,
+            trangThai: null,
+            role: null,
+        };
+
+        // Hàm tải thông tin người dùng
+        $scope.loadUser = function () {
+            var url = "http://localhost:8080/api/user/profile";
+            $http.get(url).then(function (resp) {
+                if (resp.data.username === null) {
+                    $scope.user = null;
+                    console.log("Người dùng chưa đăng nhập hoặc không có dữ liệu.");
+                } else {
+                    $scope.user = resp.data;
+                    console.log("Dữ liệu user đã tải thành công:", $scope.user);
+                    $scope.loadUserpremium(); // GỌI HÀM Ở ĐÂY ĐỂ ĐẢM BẢO USER ĐÃ CÓ TRƯỚC KHI LỌC DỮ LIỆU
+                }
+            }, function (error) {
+                console.error("Có lỗi khi tải user: ", error);
+            });
+        };
+
+        $scope.loadUserpremium = function () {
+            var url = "http://localhost:8080/api/userpremium";
+            $http.get(url).then(function (response) {
+                if ($scope.user) {
+                    $scope.goiPremium = response.data.filter(up => up.user && up.user.username === $scope.user.username);
+                    console.log("Gói đăng ký đã tải:", $scope.goiPremium);
+                }
+            }).catch(function (error) {
+                console.error("Lỗi khi tải gói đăng ký:", error);
+            });
+        };
+
+        // Gọi loadUser trước để đảm bảo user được load trước khi gọi gói Premium
+        $scope.loadUser();
+        $http.get("http://localhost:8080/api/goipremium")
+            .then(function (response) {
+                if (Array.isArray(response.data)) {
+                    $scope.goipremiumList = response.data.filter(goi => goi.trangThai === true);
+                } else {
+                    $scope.goipremiumList = [];
+                }
+                console.log("Danh sách gói Premium hợp lệ:", $scope.goipremiumList);
+            })
+            .catch(function (error) {
+                console.error("Lỗi khi tải dữ liệu:", error);
+            });
+
+
+        $scope.pay = function (plan, amount) {
+            if ($scope.goiPremium && $scope.goiPremium.length > 0) {
+                let goiDangKy = $scope.goiPremium[0]; // Lấy gói đầu tiên của user (giả sử chỉ có 1 gói)
+                let ngayHetHanDate = new Date(goiDangKy.ngayHetHan);
+                let today = new Date();
+
+                // Nếu gói còn hiệu lực, hỏi người dùng có muốn gia hạn không
+                if (ngayHetHanDate > today) {
+                    let tenGoi = goiDangKy.goiPremium ? goiDangKy.goiPremium.tenGoi : "Gói không xác định";
+                    let ngayHetHan = ngayHetHanDate.toLocaleDateString('vi-VN');
+
+                    let message = `Bạn đã có gói đăng ký "${tenGoi}" còn hạn đến ${ngayHetHan}.\nBạn có muốn gia hạn thêm không?`;
+
+                    if (!confirm(message)) {
+                        return; // Người dùng chọn "Hủy", không tiếp tục
+                    }
+                }
+            }
+
+            // Tiến hành thanh toán nếu user chưa có gói hoặc muốn gia hạn
+            $http.post("http://localhost:8080/api/payment/create", {
+                orderType: plan,
+                amount: amount
+            }).then(function (response) {
+                if (response.data.paymentUrl) {
+                    window.location.href = response.data.paymentUrl;
+                } else {
+                    alert("Lỗi khi tạo thanh toán, vui lòng thử lại!");
+                }
+            }).catch(function (error) {
+                console.error("Lỗi:", error);
+                alert("Có lỗi xảy ra, vui lòng thử lại sau!");
+            });
+        };
+
+
+
+        // Kiểm tra trạng thái thanh toán từ URL
+        function savePaymentInfo() {
+            let params = new URLSearchParams(window.location.search);
+            let amount = parseInt(params.get("vnp_Amount"), 10);
+            let responseCode = params.get("vnp_ResponseCode");
+
+            fetch("http://localhost:8080/api/user/profile")
+                .then(response => response.json())
+                .then(user => {
+                    if (!user.email) {
+                        console.error("Không tìm thấy email người dùng");
+                        return;
+                    }
+
+                    fetch(`http://localhost:8080/api/payment/save?vnp_Amount=${amount}&vnp_ResponseCode=${responseCode}&email=${user.email}`, {
+                        method: "POST"
+                    })
+                        .then(response => response.text())
+                        .then(data => {
+                            console.log("Server Response:", data);
+                        })
+                        .catch(error => console.error("Lỗi khi lưu thanh toán:", error));
+                })
+                .catch(error => console.error("Lỗi khi tải thông tin user:", error));
+        }
+        // Gọi khi trang load
+        savePaymentInfo();
+        $scope.checkPaymentStatus = function () {
+            let params = new URLSearchParams(window.location.search);
+            let responseCode = params.get("vnp_ResponseCode");
+
+            if (responseCode !== '00') {
+                console.log("Thanh toán không thành công.");
+                return;
+            }
+
+            // Gọi API để lấy thông tin user
+            $http.get("http://localhost:8080/api/user/profile")
+                .then(function (resp) {
+                    let user = resp.data;
+                    if (!user || !user.username) {
+                        console.error("Không tìm thấy thông tin người dùng!");
+                        return;
+                    }
+
+                    // Gọi API để lấy gói Premium của user
+                    $http.get("http://localhost:8080/api/userpremium")
+                        .then(function (response) {
+                            let userPremium = response.data.find(up => up.user && up.user.username === user.username);
+
+                            if (userPremium && userPremium.goiPremium) {
+                                alert(`🎉 Bạn đã thanh toán thành công gói "${userPremium.goiPremium.tenGoi}"!`);
+                            } else {
+                                alert("✅ Thanh toán thành công, nhưng không tìm thấy gói Premium.");
+                            }
+                        })
+                        .catch(function (error) {
+                            console.error("Lỗi khi tải thông tin gói Premium:", error);
+                        });
+
+                })
+                .catch(function (error) {
+                    console.error("Lỗi khi tải thông tin user:", error);
+                });
+        };
+
+// Gọi khi trang load
+        $scope.checkPaymentStatus();
+
+
+
+    });
+
+
+</script>
+</body>
+</html>

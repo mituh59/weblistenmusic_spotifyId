@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý Người Dùng</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous">
+<style>
+.navbar {
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000;
+	background-color: rgba(2, 21, 70, 0.9) !important;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	height: 55px;
+}
+
+.sidebar-item {
+	color: white;
+	background-color: #343a40;
+	padding: 10px;
+	border: 1px solid #6c757d;
+	border-radius: 5px;
+	margin-bottom: 10px;
+	margin-left: 15px;
+	text-align: left;
+	font-weight: bold;
+	transition: 0.3s;
+}
+
+.sidebar-item:hover {
+	background-color: #495057;
+	border-color: white;
+	color: white !important;
+}
+</style>
+</head>
+<body>
+	<div>
+		<!-- Navbar -->
+		<nav class="navbar navbar-expand-lg navbar-light align-items-center">
+			<div class="container d-flex justify-content-between">
+				<!-- Bên trái: MUSIC -->
+				<a class="navbar-brand text-light" href="#"><i
+					class="bi bi-music-note"></i> MUSIC</a>
+
+				<!-- Ở giữa: A D M I N -->
+				<div class="text-center flex-grow-1">
+					<span class="navbar-text text-light fw-bold fs-4">A D M I N</span>
+				</div>
+
+				<!-- Bên phải: User dropdown + Ngôn ngữ -->
+				<div class="d-flex align-items-center">
+					<!-- Dropdown User -->
+					<div class="dropdown me-3">
+						<button th:text="${userDetail.hoTen}"
+							class="btn btn-primary dropdown-toggle" type="button"
+							id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+						</button>
+						<ul class="dropdown-menu dropdown-menu-end"
+							aria-labelledby="userDropdown">
+							<li><a class="dropdown-item" href="#">Thông tin tài
+									khoản</a></li>
+							<li><a class="dropdown-item" href="#">Cài đặt</a></li>
+							<li><hr class="dropdown-divider"></li>
+							<li><form action="/logout" method="POST">
+									<button class="btn btn-primary dropdown-item text-danger"
+										type="submit">Đăng xuất</button>
+								</form></li>
+						</ul>
+					</div>
+
+					<!-- Chuyển đổi ngôn ngữ -->
+					<div class="language-switch">
+						<a href="#">Tiếng Việt</a> | <a href="#">English</a>
+					</div>
+				</div>
+			</div>
+		</nav>
+
+		<!-- Body -->
+		<div class="row">
+			<!-- Menu -->
+			<div class="col-2">
+				<!-- Sidebar -->
+				<div class="d-flex flex-column p-3 bg-dark text-white"
+					style="width: 250px; height: 100vh;">
+					<hr>
+					<ul class="nav nav-pills flex-column mb-auto">
+						<li class="nav-item"><a href="/admin/theloai/index.html"
+							class="nav-link sidebar-item">Quản lý thể loại nhạc</a></li>
+						<li><a href="/admin/nghesi/index.html"
+							class="nav-link sidebar-item">Quản lý Nghệ sĩ</a></li>
+						<li><a href="/admin/baihat/index.html"
+							class="nav-link  sidebar-item">Quản lý Bài hát</a></li>
+						<li><a href="/admin/album/index.html"
+							class="nav-link sidebar-item">Quản lý Album</a></li>
+						<li><a href="/admin/goidangky/index.html"
+							class="nav-link sidebar-item">Quản lý Gói đăng ký</a></li>
+						<li><a href="/admin/binhluan/index.html"
+							class="nav-link sidebar-item">Quản lý Bình luận</a></li>
+						<li><a href="/admin/user"
+							class="nav-link active sidebar-item">Quản lý Người dùng</a></li>
+						<li><a href="/admin/baocao/index.html"
+							class="nav-link sidebar-item">Báo cáo thống kê</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- Noi dung -->
+			<div class="col-10 mx-auto" style="margin-top: 70px;">
+				<div ng-if="!selectedGoiPremium">
+					<!-- Top content -->
+					<div class="d-flex justify-content-center mb-3">
+						<input type="text" class="form-control w-50"
+							placeholder="Tìm kiếm">
+						<button class="btn btn-outline-dark ms-3">Tìm kiếm</button>
+					</div>
+
+					<!-- Bottom content -->
+					<div class="border border-secondary rounded p-3 mb-3">
+						<table class="table text-center">
+							<thead>
+								<tr>
+									<th>No.</th>
+									<th>Username</th>
+									<th>Email</th>
+									<th>Họ tên</th>
+									<th>Hình ảnh</th>
+									<th>Trạng thái</th>
+									<th>Quyền</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="e, s: ${list}">
+									<td th:text="${s.count}">No.</td>
+									<td th:text="${e.username}">Username</td>
+									<td th:text="${e.email}">Email</td>
+									<td th:text="${e.hoTen}">x</td>
+									<td th:text="${e.hinhAnh}">x</td>
+									<td th:text="${e.trangThai ? 'Active' : 'Inactive'}">x</td>
+									<td
+										th:text="${e.role != null ? 
+   												 (e.role.tenRole == 'ROLE_MANAGER' ? 'Quản lý' : 
+												    e.role.tenRole == 'ROLE_USER' ? 'Người dùng' : 
+												    e.role.tenRole == 'ROLE_ADMIN' ? 'Quản trị viên' : '') 
+												    : 'Không có quyền'}">Chức
+										vụ</td>
+
+									<td><a class="btn btn-outline-primary"
+										th:href="@{/admin/user/edit/{username}(username=${e.username})}">Edit</a></td>
+									<td><a class="btn btn-danger"
+										th:href="@{/admin/user/delete/{username}(username=${e.username})}">Delete
+									</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				<!-- Bảng thêm và chỉnh sửa thông tin -->
+				<!-- User Add Form -->
+				<div class="row">
+					<form th:action="@{/admin/user}" th:object="${user}" method="post"
+						class="w-100">
+						<div class="form-group">
+							<label for="username">Username</label> <input type="text"
+								id="username" class="form-control" th:field="*{username}"
+								required />
+						</div>
+
+						<div class="form-group">
+							<label for="password">Password</label> <input type="text"
+								id="password" class="form-control" th:field="*{password}"
+								required />
+						</div>
+
+						<div class="form-group">
+							<label for="email">Email</label> <input type="email" id="email"
+								class="form-control" th:field="*{email}" required />
+						</div>
+
+						<div class="form-group">
+							<label for="hoTen">Họ Tên</label> <input type="text" id="hoTen"
+								class="form-control" th:field="*{hoTen}" required />
+						</div>
+
+						<div class="form-group">
+							<label for="hinhAnh">Hình ảnh</label> <input type="text"
+								id="hinhAnh" class="form-control" th:field="*{hinhAnh}" />
+						</div>
+
+						<div class="form-group">
+							<label for="trangThai" class="d-block">Trạng thái</label>
+							<div class="form-check">
+								<input type="checkbox" id="trangThai" class="form-check-input"
+									th:field="*{trangThai}" /> <label for="trangThai"
+									class="form-check-label">Active</label>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="roleId">Role</label> <select id="roleId"
+								class="form-control" th:field="*{role.roleId}" required>
+								<option th:each="role : ${roles}" th:value="${role.roleId}"
+									th:text="${role.tenRole}"></option>
+							</select>
+						</div>
+						<br>
+						<button type="submit" class="btn btn-success">Save</button>
+						<a href="/admin/user" class="btn btn-secondary">Cancel</a>
+					</form>
+
+				</div>
+			</div>
+		</div>
+
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+			crossorigin="anonymous">
+			
+		</script>
+</body>
+</html>

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Music Website</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+	crossorigin="anonymous">
+<style>
+body {
+	background: linear-gradient(1deg, #b561f1, #08013a);
+	padding-top: 70px; /* Tạo khoảng trống cho navbar */
+}
+
+a {
+	text-decoration: none; /* Loại bỏ gạch chân */
+	color: inherit; /* Thừa kế màu chữ từ phần tử cha */
+	font-weight: normal; /* Đảm bảo không có kiểu chữ đậm */
+}
+
+.navbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000; /* Đảm bảo nó hiển thị trên các phần tử khác */
+	background-color: rgba(2, 21, 70, 0.9) !important;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Thêm hiệu ứng đổ bóng */
+	height: 55px;
+}
+
+.card {
+	background: rgba(255, 255, 255, 0.9);
+	border-radius: 10px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.list-group-item {
+	background: rgba(255, 255, 255, 0.9);
+}
+
+footer {
+	background-color: #222;
+}
+
+.container {
+	margin-top: 20px;
+}
+
+.row {
+	display: flex;
+	justify-content: space-between;
+}
+
+.col-md-4 {
+	flex: 0 0 30%; /* Set the width of each column to 30% */
+	margin: 5px;
+}
+
+img {
+	width: 100%;
+	height: auto; /* Maintain aspect ratio */
+	max-height: 200px; /* Set a maximum height */
+	object-fit: cover; /* Cover the container */
+	border-radius: 5px; /* Add rounded corners */
+}
+
+.phantu {
+	margin-top: 3px;
+}
+
+.language-switch {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	font-size: 1rem;
+	display: flex;
+	gap: 10px; /* Adds spacing between the two links */
+}
+
+.language-switch a {
+	text-decoration: none !important; /* Bỏ dấu gạch chân */
+	color: #ffffff;
+	transition: color 0.3s ease-in-out;
+}
+
+.language-switch a:hover {
+	color: #030bfa; /* Change the color on hover */
+	text-decoration: underline; /* Gạch chân khi hover */
+}
+
+.language-switch a.active {
+	color: #030bfa; /* Highlight the active language */
+	font-weight: bold;
+}
+
+.timkiem {
+	margin-right: 150px;
+}
+
+.btn2 {
+	margin-right: 20px;
+	border-radius: 20px;
+}
+
+.btn3 {
+	margin-right: 80px;
+	border-radius: 20px;
+}
+
+.image-card {
+	color: white;
+	padding: 10px;
+	border-radius: 10px;
+	width: 250px;
+}
+
+.image-card img {
+	border-radius: 10px;
+	width: 100%;
+}
+
+.play-btn {
+	position: absolute;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 2rem;
+	background: rgba(0, 0, 0, 0.5);
+	border-radius: 50%;
+	padding: 10px;
+}
+
+.music-card11 {
+	display: flex;
+	align-items: center; /* Căn giữa theo chiều dọc */
+	justify-content: center; /* Căn giữa theo chiều ngang */
+	gap: 10px;
+	padding: 10px;
+	border-radius: 5px;
+	transition: 0.3s;
+}
+
+.music-card11 img {
+	width: 60px;
+	height: 60px;
+	border-radius: 5px;
+}
+
+.music-card11:hover {
+	background: rgba(255, 255, 255, 0.1);
+	cursor: pointer;
+}
+
+.refresh-btn {
+	background-color: #8a2be2;
+	color: white;
+	border-radius: 20px;
+	padding: 5px 15px;
+	font-size: 16px;
+	border: none;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.refresh-btn:hover {
+	background-color: #7a1bbf; /* Màu nền khi hover */
+	transform: scale(1.1); /* Phóng to nút khi hover */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Bóng đổ khi hover */
+}
+
+.refresh-btn:hover a {
+	color: white; /* Đảm bảo màu chữ vẫn trắng khi hover */
+}
+
+.music-card img {
+	width: 60px;
+	height: 60px;
+	border-radius: 5px;
+}
+
+.music-card {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px;
+	border-radius: 8px;
+	background: #bbafdb;
+	margin-bottom: 8px;
+	transition: 0.3s;
+	width: 300px;
+}
+
+.music-card:hover {
+	background: rgba(255, 255, 255, 0.1);
+	cursor: pointer;
+}
+
+.ranking {
+	font-size: 18px;
+	font-weight: bold;
+	opacity: 0.7;
+}
+
+.date {
+	font-size: 12px;
+	opacity: 0.7;
+}
+
+.music-cardf {
+	position: relative;
+	overflow: hidden;
+	border-radius: 8px;
+	transition: transform 0.3s ease;
+}
+
+.music-cardf:hover {
+	transform: scale(1.05);
+}
+
+.music-cardf img {
+	width: 100%;
+	height: 150px; /* Đảm bảo ảnh cố định */
+	object-fit: cover;
+	border-radius: 8px;
+}
+
+.play-icon {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 24px;
+	color: white;
+	opacity: 0;
+	transition: opacity 0.3s ease;
+}
+
+.music-cardf:hover .play-icon {
+	opacity: 1;
+}
+
+.music-cardf p {
+	white-space: nowrap; /* Ngăn chặn việc xuống dòng */
+	overflow: hidden; /* Ẩn phần văn bản vượt quá */
+	text-overflow: ellipsis; /* Thêm dấu ba chấm (...) vào cuối */
+	max-width: 100%;
+	/* Đảm bảo tên bài hát không vượt quá chiều rộng của container */
+	text-align: center; /* Căn giữa văn bản */
+}
+
+.mucsi2 img {
+	max-height: 70px;
+}
+
+.album-container {
+	overflow-x: auto;
+	white-space: nowrap;
+	padding-bottom: 10px; /* Tránh che nội dung */
+}
+
+/* Tuỳ chỉnh thanh cuộn */
+.album-container::-webkit-scrollbar {
+	height: 8px;
+}
+
+.album-container::-webkit-scrollbar-track {
+	background: #a26cd6;
+	border-radius: 10px;
+}
+
+.album-container::-webkit-scrollbar-thumb {
+	background: #fdfdfd;
+	border-radius: 10px;
+}
+
+/* Đảm bảo các album hiển thị đúng hàng ngang */
+.row.flex-nowrap {
+	flex-wrap: nowrap;
+}
+
+.rating {
+	font-size: 1.5rem;
+	color: #B0B0B0;
+	cursor: pointer;
+}
+
+.rating .star:hover, .rating .star.active {
+	color: #ffcd3c;
+}
+.comment-box {
+	word-break: break-word;
+	padding: 8px;
+	margin: 5px 0;
+	background-color: #f8f9fa;
+	border-radius: 8px;
+}
+
+.comment-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.comment-username {
+	font-weight: bold;
+	color: #007bff;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 200px; /* Giới hạn chiều dài tên người dùng */
+}
+
+.comment-date {
+	font-size: 0.85em;
+	color: #888;
+}
+
+.comment-content {
+	margin-top: 3px;
+	word-wrap: break-word;
+}
+
+.rating {
+	font-size: 24px;
+	cursor: pointer;
+}
+
+.star {
+	color: gray;
+	transition: color 0.2s;
+}
+
+.star:hover, .star.selected {
+	color: gold;
+}
+</style>
+</head>
+<body ng-app="myapp">
+	<div ng-controller="myctrl">
+				<!-- Navbar -->
+		<nav class="navbar navbar-expand-lg navbar-light align-items-center">
+			<div class=" phantu container d-flex justify-content-center">
+				<a class="navbar-brand text-light" href="/view/trangchu.html"><i
+					class="bi bi-house-door"></i> Music</a>
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#navbarNav">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse justify-content-center"
+					id="navbarNav">
+					<ul class="navbar-nav me-auto">
+						<li class="nav-item"><a class="nav-link text-light"
+							href="/view/baihat.html"><i class="bi bi-headphones"></i> Bài
+								hát</a></li>
+						<li class="nav-item"><a class="nav-link text-light"
+							href="/view/album.html"><i class="bi bi-person-rolodex"></i>
+								Album</a></li>
+						<li class="nav-item"><a class="nav-link text-light"
+							href="/view/nghesi.html"><i class="bi bi-music-note-list"></i>
+								Nghệ sĩ</a></li>
+					</ul>
+				</div>
+				<form class="timkiem d-flex">
+					<input class="form-control me-2" type="search"
+						placeholder="Tìm kiếm" ng-model="keyword">
+					<button ng-click="search(keyword)"
+						class="btn btn-outline-primary text-light" type="submit">Tìm</button>
+				</form>
+
+				<div ng-if="!user || !user.username" style="margin-left: 50px;">
+					<button class="btn btn2 btn-primary ms-2 "
+						onclick="window.location.href='/login'">Đăng nhập</button>
+					<button class="btn btn3 btn-outline-primary text-light ms-2 "
+						onclick="window.location.href='dangky.html'">Đăng ký</button>
+				</div>
+				<!-- Dropdown User -->
+				<div class="dropdown"
+					style="margin-right: 100px;"
+					ng-if="user || user.username">
+					<a class="btn btn2 btn-outline-primary ms-2"
+						href="/user/nangcaptaikhoan.html">
+						Nâng cấp tài khoản <i class="bi bi-lightbulb"></i>
+					</a>
+					<button class="btn btn-primary dropdown-toggle" type="button"
+						id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+						{{user.hoTen}}</button>
+					<ul class="dropdown-menu dropdown-menu-end"
+						aria-labelledby="userDropdown">
+						<li><a class="dropdown-item" href="/user/profile.html">Quản lý tài khoản</a></li>
+						<li><a class="dropdown-item" href="/user/doimatkhau.html">Đổi mật khẩu</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><form action="/logout" method="POST">
+								<button class="btn btn-primary dropdown-item text-danger"
+									type="submit">Đăng xuất</button>
+							</form></li>
+					</ul>
+				</div>
+				<div class="language-switch">
+					<a href="#">Tiếng Việt</a> | <a href="#">English</a>
+				</div>
+			</div>
+		</nav>
+
+
+		<!-- Main Content -->
+		<div class="container mt-4">
+			<div class="row">
+				<!-- Left Content -->
+				<div class="col-md-9">
+					<div class="d-flex justify-content-between align-items-center">
+						<iframe style="border-radius: 12px"
+							ng-src="{{ getSpotifyIframeUrl(baihat.spotifyId) }}" width="100%"
+							height="352" frameBorder="0" allowfullscreen=""
+							allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+							loading="lazy"></iframe>
+					</div>
+					<div class="d-flex justify-content-end">
+						<a class="btn btn-primary mt-3"
+							ng-href="/user/quanlyplaylist.html?baiHatId={{baihat.baiHatId}}">
+							Thêm vào Playlist </a>
+					</div>
+					<!-- Nghệ Sĩ -->
+					<h4 class="mt-4 text-light">Nghệ Sĩ</h4>
+					<div class="row" style="justify-content: flex-start;">
+						<div class="col-md-4">
+							<a href="nghesidetail.html?id={{ baihat.ngheSi.ngheSiId }}" class="music-card11 text-center">
+								<div class="music-card-inner">
+									<img
+										ng-src="{{ baihat.ngheSi.hinhNgheSi ? '/images/' + baihat.ngheSi.hinhNgheSi : '/images/default.png' }}"
+										alt="{{ baihat.ngheSi.tenNgheSi }}"
+										class="img-fluid rounded-circle"
+										style="width: 150px; height: 150px; object-fit: cover;">
+									<h5 class="mt-2" style="color: white;">{{
+										baihat.ngheSi.tenNgheSi }}</h5>
+								</div>
+							</a>
+						</div>
+					</div>
+					<!-- Bai hat -->
+					<h4 class="mt-4 text-light">Bài Hát của {{
+						baihat.ngheSi.tenNgheSi }}</h4>
+					<div class="row mt-3" style="justify-content: flex-start;">
+						<div class="col-md-4" ng-repeat="s in baihats">
+							<a href="baihatdetail.html?id={{ s.baiHatId }}" class="music-card11 text-center">
+								<div class="music-card-inner">
+									<img
+										ng-src="{{ s.hinhBaiHat ? '/images/' + s.hinhBaiHat : '/images/default.png' }}"
+										alt="{{ s.tenBaiHat }}" class="img-fluid rounded"
+										style="width: 100%; height: 250px; object-fit: cover;">
+									<h5 class="mt-2 text-start" style="color: white;">{{
+										s.tenBaiHat }}</h5>
+									<h6 class="mt-2 text-start" style="color: #B0B0B0;">{{
+										s.ngheSi.tenNgheSi }}</h6>
+								</div>
+							</a>
+						</div>
+					</div>
+					<!-- Album -->
+					<div ng-if="albums && albums.length > 0">
+						<h4 class="mt-4 text-light">Album của {{
+							baihat.ngheSi.tenNgheSi }}</h4>
+						<div class="row mt-3" style="justify-content: flex-start;">
+							<div class="col-md-4" ng-repeat="s in albums">
+								<a href="albumdetail.html?id={{ s.albumId }}" class="music-card11 text-center">
+									<div class="music-card-inner">
+										<img
+											ng-src="{{ s.hinhAlbum ? '/images/' + s.hinhAlbum : '/images/default.png' }}"
+											alt="{{ s.tenAlbum }}" class="img-fluid rounded"
+											style="width: 100%; height: 250px; object-fit: cover;">
+										<h5 class="mt-2 text-start" style="color: white;">{{
+											s.tenAlbum }}</h5>
+										<h6 class="mt-2 text-start" style="color: #B0B0B0;">{{
+											s.ngheSi.tenNgheSi }}</h6>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+
+					<!-- Bai hat cung the loai -->
+					<h4 class="mt-4 text-light">Cùng thể loại {{
+						baihat.theLoai.tenTheLoai }}</h4>
+					<div class="row" style="justify-content: flex-start;">
+						<div class="col-md-4" ng-repeat="s in baihatcungtheloai">
+							<a href="baihatdetail.html?id={{ s.baiHatId }}" class="music-card11 text-center">
+								<div class="music-card-inner">
+									<img
+										ng-src="{{ s.hinhBaiHat ? '/images/' + s.hinhBaiHat : '/images/default.png' }}"
+										alt="{{ s.tenBaiHat }}" class="img-fluid rounded"
+										style="width: 100%; height: 250px; object-fit: cover;">
+									<h5 class="mt-2 text-start" style="color: white;">{{
+										s.tenBaiHat }}</h5>
+									<h6 class="mt-2 text-start" style="color: #B0B0B0;">{{
+										s.ngheSi.tenNgheSi }}</h6>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+
+
+				<!-- Right Content (Ranking) -->
+				<div class="col-md-3">
+					<!-- Bảng Bình luận và Đánh giá -->
+					<div class="card bg-dark text-light mt-4">
+						<div class="card-header">
+							<h5>Bình luận và Đánh giá</h5>
+						</div>
+						<div class="card-body">
+							<!-- Bảng Bình luận -->
+
+							<div class="card shadow-sm mb-3">
+								<div class="card-body">
+									<div class="input-group">
+										<input type="text" class="form-control" ng-model="newComment"
+											placeholder="Nhập bình luận..." />
+										<button class="btn btn-primary" ng-click="addComment()">Gửi</button>
+									</div>
+								</div>
+							</div>
+
+							<div class="list-group">
+								<div class="list-group-item comment-box"
+									ng-repeat="binhluan in comments track by $index">
+									<div class="comment-header">
+										<span class="comment-username">{{
+											binhluan.user.username }}</span> <small class="comment-date">{{
+											binhluan.ngayBinhLuan | date:'dd/MM/yyyy' }}</small>
+									</div>
+									<p class="comment-content">{{ binhluan.noiDungBL }}</p>
+								</div>
+							</div>
+
+
+							<!-- Đánh giá -->
+							<h6 class="text-light">Đánh giá</h6>
+							<div class="d-flex align-items-center mb-3">
+								<!-- Các sao đánh giá -->
+								<div class="rating">
+									<span class="star" ng-class="{'selected': newRating >= 1}"
+										ng-click="setRating(1)">&#9733;</span> <span class="star"
+										ng-class="{'selected': newRating >= 2}"
+										ng-click="setRating(2)">&#9733;</span> <span class="star"
+										ng-class="{'selected': newRating >= 3}"
+										ng-click="setRating(3)">&#9733;</span> <span class="star"
+										ng-class="{'selected': newRating >= 4}"
+										ng-click="setRating(4)">&#9733;</span> <span class="star"
+										ng-class="{'selected': newRating >= 5}"
+										ng-click="setRating(5)">&#9733;</span>
+								</div>
+
+
+								<button class="btn btn-primary ms-2" ng-click="addRating()">Gửi
+									Đánh giá</button>
+							</div>
+
+							<!-- Hiển thị Điểm Đánh giá -->
+							<div class="text-center">
+								<h6 class="text-light">
+									Điểm Đánh giá: <span id="rating-score">{{ avgRating }}</span> /
+									5
+								</h6>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<div class="mt-5"
+			style="background: linear-gradient(1deg, #b561f1, #08013a); padding: 20px; text-align: center; color: white; font-size: 14px;">
+			<i class="bi bi-badge-hd"></i>
+			<p>Chào mừng bạn đến với Music Web 🎵 - Nơi âm nhạc kết nối cảm
+				xúc!</p>
+			<p style="font-style: italic; opacity: 0.8;">"Âm nhạc là ngôn ngữ
+				chung của tâm hồn!"</p>
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+		crossorigin="anonymous"></script>
+	<script>
+	var app = angular.module("myapp", []);
+	app.controller("myctrl", function ($http, $scope, $sce) {
+	    $scope.baihat = {};
+	    $scope.baihats = [];
+	    $scope.albums = [];
+	    $scope.baihatcungtheloai = [];
+	    $scope.comments = [];
+	    $scope.danhGias = [];
+	    $scope.user = null;
+	    $scope.newComment = "";
+	    $scope.newRating = 0;
+	    $scope.avgRating = 0;
+
+	    // Lấy ID bài hát từ URL
+	    var params = new URLSearchParams(window.location.search);
+	    $scope.baiHatId = params.get("id");
+	    console.log("🎵 ID bài hát từ URL:", $scope.baiHatId);
+
+	    // Tải thông tin người dùng
+	    $scope.loadUser = function () {
+	        $http.get("http://localhost:8080/api/user/profile").then(function (resp) {
+	            $scope.user = resp.data.username ? resp.data : null;
+	            console.log("👤 Thông tin người dùng:", $scope.user);
+	        }, function (error) {
+	            console.error("❌ Lỗi khi tải thông tin người dùng:", error);
+	        });
+	    };
+
+	    // Tải thông tin bài hát
+	    $scope.loadBaiHat = function () {
+	        $http.get(`http://localhost:8080/api/baihat/${$scope.baiHatId}`).then(function (resp) {
+	            $scope.baihat = resp.data;
+	            console.log("🎶 Bài hát:", $scope.baihat);
+	            $scope.loadBaiHats(resp.data.ngheSi.ngheSiId, resp.data.theLoai.tenTheLoai);
+	            $scope.loadAlbums(resp.data.ngheSi.ngheSiId);
+	            $scope.loadComments();
+	            $scope.loadRatings();
+	        }, function (error) {
+	            console.error("❌ Lỗi khi tải bài hát:", error);
+	        });
+	    };
+
+	    // Tải danh sách bài hát cùng thể loại/nghệ sĩ
+	    $scope.loadBaiHats = function (ngheSiId, theLoai) {
+	        $http.get("http://localhost:8080/api/baihat").then(function (resp) {
+	            let allSongs = resp.data;
+	            $scope.baihats = allSongs.filter(bh => bh.ngheSi.ngheSiId === ngheSiId && bh.trangThai);
+	            $scope.baihatcungtheloai = allSongs.filter(bh => bh.theLoai.tenTheLoai === theLoai && bh.trangThai);
+	            console.log("📀 Danh sách bài hát cùng nghệ sĩ:", $scope.baihats);
+	            console.log("🎼 Bài hát cùng thể loại:", $scope.baihatcungtheloai);
+	        }, function (error) {
+	            console.error("❌ Lỗi khi tải danh sách bài hát:", error);
+	        });
+	    };
+
+	    // Tải danh sách album của nghệ sĩ
+	    $scope.loadAlbums = function (ngheSiId) {
+	        $http.get("http://localhost:8080/api/album").then(function (resp) {
+	            $scope.albums = resp.data.filter(a => a.ngheSi.ngheSiId === ngheSiId);
+	            console.log("💿 Danh sách album:", $scope.albums);
+	        }, function (error) {
+	            console.error("❌ Lỗi khi tải danh sách album:", error);
+	        });
+	    };
+
+	    // Tải danh sách bình luận
+	    $scope.loadComments = function () {
+	        $http.get(`http://localhost:8080/api/comments/${$scope.baiHatId}`).then(function (resp) {
+	            $scope.comments = resp.data.map(comment => ({
+	                ...comment,
+	                ngayBinhLuan: new Date(comment.ngayBinhLuan),
+	            }));
+	            console.log("💬 Danh sách bình luận:", $scope.comments);
+	        }, function (error) {
+	            console.error("❌ Lỗi khi tải bình luận:", error);
+	        });
+	    };
+
+	    // Thêm bình luận
+	    $scope.addComment = function () {
+	        if (!$scope.user) {
+	            alert("Bạn phải đăng nhập để bình luận!");
+	            return;
+	        }
+
+	        if (!$scope.newComment.trim()) {
+	            alert("Nội dung bình luận không được để trống!");
+	            return;
+	        }
+
+	        var commentData = {
+	            user: { username: $scope.user.username },
+	            baiHat: { baiHatId: $scope.baiHatId },
+	            noiDungBL: $scope.newComment
+	        };
+
+	        $http.post("http://localhost:8080/api/comments/add", commentData).then(function (resp) {
+	            $scope.comments.push(resp.data);
+	            $scope.newComment = "";
+	            console.log("✅ Bình luận mới thêm:", resp.data);
+	        }, function (error) {
+	            console.error("❌ Lỗi khi thêm bình luận:", error);
+	        });
+	    };
+
+	    // Tải danh sách đánh giá
+	    $scope.loadRatings = function () {
+	        $http.get(`http://localhost:8080/api/danhgia/${$scope.baiHatId}`).then(function (resp) {
+	            $scope.danhGias = resp.data;
+	            $scope.avgRating = $scope.calculateAverageRating($scope.danhGias);
+	            console.log("⭐ Danh sách đánh giá:", $scope.danhGias);
+	            console.log("📊 Điểm trung bình:", $scope.avgRating);
+	        }, function (error) {
+	            console.error("❌ Lỗi khi tải đánh giá:", error);
+	        });
+	    };
+
+	    // Gửi đánh giá mới
+	    $scope.addRating = function () {
+	        if (!$scope.user) {
+	            alert("Bạn phải đăng nhập để đánh giá!");
+	            return;
+	        }
+
+	        if ($scope.newRating < 1 || $scope.newRating > 5) {
+	            alert("Điểm đánh giá phải từ 1 đến 5!");
+	            return;
+	        }
+
+	        var ratingData = {
+	            user: { username: $scope.user.username },
+	            baiHat: { baiHatId: $scope.baiHatId },
+	            diemSo: $scope.newRating
+	        };
+
+	        $http.post("http://localhost:8080/api/danhgia/add", ratingData).then(function (resp) {
+	            $scope.danhGias.push(resp.data);
+	            $scope.avgRating = $scope.calculateAverageRating($scope.danhGias);
+	            $scope.newRating = 0;
+	            console.log("✅ Đánh giá mới thêm:", resp.data);
+	        }, function (error) {
+	            console.error("❌ Lỗi khi thêm đánh giá:", error);
+	        });
+	    };
+
+	    // Tính trung bình đánh giá
+	    $scope.calculateAverageRating = function (danhGias) {
+	        if (danhGias.length === 0) return 0;
+	        let sum = danhGias.reduce((total, dg) => total + dg.diemSo, 0);
+	        return (sum / danhGias.length).toFixed(1);
+	    };
+
+	    // Lấy URL nhúng Spotify
+	    $scope.getSpotifyIframeUrl = function (spotifyId) {
+	        return $sce.trustAsResourceUrl(`https://open.spotify.com/embed/track/${spotifyId}`);
+	    };
+
+	    $scope.getSpotifyIframeUrlAlbum = function (spotifyId) {
+	        return $sce.trustAsResourceUrl(`https://open.spotify.com/embed/album/${spotifyId}`);
+	    };
+	    $scope.setRating = function (rating) {
+	        $scope.newRating = rating;  // Lưu số sao đã chọn
+	    };
+	    $scope.addRating = function () {
+	        if (!$scope.user) {
+	            alert("Bạn phải đăng nhập để đánh giá!");
+	            return;
+	        }
+
+	        // Kiểm tra xem người dùng đã đánh giá chưa
+	        let userRated = $scope.danhGias.some(dg => dg.user.username === $scope.user.username);
+	        if (userRated) {
+	            alert("Bạn chỉ có thể đánh giá một lần!");
+	            return;
+	        }
+
+	        if ($scope.newRating < 1 || $scope.newRating > 5) {
+	            alert("Điểm đánh giá phải từ 1 đến 5!");
+	            return;
+	        }
+
+	        var ratingData = {
+	            user: { username: $scope.user.username },
+	            baiHat: { baiHatId: $scope.baiHatId },
+	            diemSo: $scope.newRating
+	        };
+
+	        $http.post("http://localhost:8080/api/danhgia/add", ratingData).then(function (resp) {
+	            $scope.danhGias.push(resp.data);
+	            $scope.avgRating = $scope.calculateAverageRating($scope.danhGias);
+	            $scope.newRating = 0;
+	            console.log("✅ Đánh giá mới thêm:", resp.data);
+	        }, function (error) {
+	            console.error("❌ Lỗi khi thêm đánh giá:", error);
+	        });
+	    };
+
+	    // Khởi chạy
+	    $scope.loadUser();
+	    $scope.loadBaiHat();
+	});
+
+
+	</script>
+</body>
+</html>

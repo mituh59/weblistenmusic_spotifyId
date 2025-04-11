@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Đăng Nhập</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.8.2/angular.min.js"></script>
+	
+</head>
+<style>
+body {
+    background: linear-gradient(1deg, #b561f1, #08013a);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+}
+.language-switch {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1rem;
+    display: flex;
+    gap: 10px;
+}
+.language-switch a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+.language-switch a:hover {
+    color: #ff416c;
+    text-decoration: underline;
+}
+.language-switch a.active {
+    color: #ff416c;
+    font-weight: bold;
+}
+.login-container {
+    width: 400px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+}
+.form-control {
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+    border: none;
+}
+.btn-primary {
+    background: #ff416c;
+    border: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+.btn-primary:hover {
+    background: #ff4b2b;
+    transform: scale(1.05);
+}
+.forgot-password {
+    color: #ffebeb;
+    text-decoration: none;
+}
+.forgot-password:hover {
+    text-decoration: underline;
+}
+</style>
+<body>
+	<div class="language-switch">
+    <a href="#" class="text-light active">Tiếng Việt</a> | <a href="#"
+        class="text-light">English</a>
+</div>
+<div class="login-container text-center">
+    <h2 class="fw-bold">Đăng nhập</h2>
+    <p class="mt-2">
+        Chưa có tài khoản? <a href="/view/dangky.html" class="text-light">Đăng
+            ký</a>
+    </p>
+
+    <form class="user" th:action="@{/login}" method="post">
+        <div class="mb-3 text-start">
+            <label class="form-label">Tên đăng nhập</label> 
+            <input type="text" class="form-control" id="username" name="username"
+                placeholder="Nhập tên đăng nhập" required>
+        </div>
+        <div class="mb-3 text-start">
+            <label class="form-label">Mật khẩu</label> 
+            <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu" required>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <input type="checkbox" id="rememberMe"> <label for="rememberMe">Ghi nhớ tôi?</label>
+            </div>
+            <a href="/view/quenmatkhau.html" class="forgot-password">Quên mật khẩu?</a>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+    </form>
+<hr class="my-4 text-light">
+
+<!-- Nút đăng nhập bằng Google -->
+<a href="/oauth2/authorization/google" class="btn-google">
+    <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo">
+    Tiếp tục với Google
+</a>
+
+<style>
+    .btn-google {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        max-width: 300px;
+        margin: 10px auto;
+        padding: 10px;
+        background-color: white;
+        color: black;
+        font-size: 16px;
+        font-weight: bold;
+        border-radius: 5px;
+        text-decoration: none;
+        border: 1px solid #ddd;
+        transition: background 0.3s, transform 0.2s;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .btn-google:hover {
+        background: #f8f9fa;
+        transform: scale(1.05);
+    }
+    .btn-google img {
+        width: 20px;
+        height: 20px;
+    }
+</style>
+
+</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		
+		<script >
+		
+		</script>
+</body>
+</html>
